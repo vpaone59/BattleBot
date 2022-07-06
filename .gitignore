@@ -1,2 +1,5 @@
-# config and data files
-.json
+# BattleBot specific
+
+testing.py
+config.json
+c.json
