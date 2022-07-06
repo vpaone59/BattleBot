@@ -42,100 +42,38 @@ else:
 TOKEN = configData["TOKEN"]
 prefix = configData["PREFIX"]
 
-# # search for the c.json file in the current directory and load the file
-# if os.path.exists(os.getcwd() + "/c.json"):
-#     with open("./c.json") as f:
-#         cData = json.load(f)
+# search for the c.json file in the current directory and load the file
+if os.path.exists(os.getcwd() + "/c.json"):
+    print("CHARACTER JSON EXISTS")
+    with open("./c.json") as f:
+        cData = json.load(f)
+        print("CHARACTERS JSON OPENED")
 
-#     # if the c file doesn't exist use the template to create the file
-# else:
-#     cTemplate = {"CHARACTER 1": [
-#         {
-#             "NAME": ""
-#         },
-#         {
-#             "HP": ""
-#         },
-#         {
-#             "ATTACK": ""
-#         },
-#         {
-#             "DEFENSE": ""
-#         },
-#         {
-#             "SANITY": ""
-#         }
-#     ],
-#         "CHARACTER 2": [
-#         {
-#             "NAME": ""
-#         },
-#         {
-#             "HP": ""
-#         },
-#         {
-#             "ATTACK": ""
-#         },
-#         {
-#             "DEFENSE": ""
-#         },
-#         {
-#             "SANITY": ""
-#         }
-#     ]}
+# if the c file doesn't exist use the template to create the file
+else:
+    cTemplate = {"CHARACTER 1": [{"NAME": ""},{"HP": ""},{"ATTACK": ""},{"DEFENSE": ""},{"SANITY": ""}],"CHARACTER 2": [{"NAME": ""},{"HP": ""},{"ATTACK": ""},{"DEFENSE": ""},{"SANITY": ""}]}
 
-#     with open(os.getcwd() + "./c.json", "w+") as f:
-#         json.dump(cTemplate, f)  # dump the accTemplate to the new acc.json
+    print("TEMPLATE USED TO CREATE CHARACTER JSON (C.JSON) IN THE CURRENT DIRECTORY")
+    with open(os.getcwd() + "./c.json", "w+") as f:
+        json.dump(cTemplate, f)  # dump the character template to new c.json
 
-# char1 = cData["CHARACTER 1"]
-# char2 = cData["CHARACTER 2"]
+# pull the data from the character json
+char1 = cData["CHARACTER 1"]
+char2 = cData["CHARACTER 2"]
 
 
-# char1 = {"CHARACTER 1": [        {
-#             "NAME": "DANK DONALD"
-#         },
-#         {
-#             "HP": "100"
-#         },
-#         {
-#             "ATTACK": "5"
-#         },
-#         {
-#             "DEFENSE": "10"
-#         },
-#         {
-#             "SANITY": "70"
-#         }
-#     ]}
-# char2=  {"CHARACTER 2": [{
-#         "NAME": "JOE 'AIRSTRIKE' BIDEN"
-#         },
-#         {
-#             "HP": "79"
-#         },
-#         {
-#             "ATTACK": "15"
-#         },
-#         {
-#             "DEFENSE": "1"
-#         },
-#         {
-#             "SANITY": "70"
-#         }
-#     ]}
+# print character sheets to the console
+print(f"{char1}\n")
+print(f"{char2}\n")
 
-# # print character sheets to the console
-# print(f"{char1}\n")
-# print(f"{char2}\n")
-
-# print(type(char1))
-# print(type(char2))
+print(type(char1))
+print(type(char2))
 
 
-# for attr in char1:
-#     for stat in attr:
-#         print(stat)
-#     print(attr)
+for attr in char1:
+    for stat in attr:
+        print(stat)
+    print(attr)
 
 
 # we need to assign the prefix to the bot and denote the bot as 'client'
@@ -196,8 +134,12 @@ async def on_message(message):
     # necessary to process anything the bot will do
     await client.process_commands(message)
 
-# @client.command(aliases=["FIGHT"])
-@client.command()
+
+@client.command(aliases=['create', 'cr'])
+async def create_fighter(ctx):
+    print("")
+
+@client.command(aliases=['f', 'battle', 'b'])
 async def fight(ctx, player2):
     player1 = ctx.message.author
     print(player1)
@@ -207,16 +149,15 @@ async def fight(ctx, player2):
     print(type(player1))
     print(type(player2))
     
-    char1 = [{"NAME": "RATHALOS", "HEALTH": 10,"ATTACK": 9}]
+    char1 = [{"NAME": "FIGHTER A"}, {"HEALTH": 10}, {"ATTACK": 9}]
     char1name = char1[0]["NAME"]
-    print(char1name)
-
-    char1hp = char1["HEALTH"]
-    char1atk = char1["ATTACK"]
-    char2 = {"NAME": "RATHIAN", "HEALTH": 10,"ATTACK": 5}
-    char2name = char2["NAME"]
-    char2hp = char2["HEALTH"]
-    char2atk = char2["ATTACK"]
+    char1hp = char1[1]["HEALTH"]
+    char1atk = char1[2]["ATTACK"]
+    
+    char2 = [{"NAME": "FIGHTER B"}, {"HEALTH": 10}, {"ATTACK": 5}]
+    char2name = char2[0]["NAME"]
+    char2hp = char2[1]["HEALTH"]
+    char2atk = char2[2]["ATTACK"]
 
 
     await ctx.send(f'{player1.mention} WANTS TO BATTLE {player2.mention}!\n{player2.mention} DO YOU ACCEPT? (REPLY YES/NO)')
