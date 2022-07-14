@@ -149,15 +149,17 @@ async def fight(ctx, player2):
     print(type(player1))
     print(type(player2))
     
-    char1 = [{"NAME": "FIGHTER A"}, {"HEALTH": 10}, {"ATTACK": 9}]
+    char1 = [{"NAME": "FIGHTER A"}, {"HEALTH": 10}, {"ATTACK": 10}]
     char1name = char1[0]["NAME"]
     char1hp = char1[1]["HEALTH"]
     char1atk = char1[2]["ATTACK"]
     
-    char2 = [{"NAME": "FIGHTER B"}, {"HEALTH": 10}, {"ATTACK": 5}]
+    char2 = [{"NAME": "FIGHTER B"}, {"HEALTH": 30}, {"ATTACK": 5}]
     char2name = char2[0]["NAME"]
     char2hp = char2[1]["HEALTH"]
     char2atk = char2[2]["ATTACK"]
+
+    fighters = [char1, char2]
 
 
     await ctx.send(f'{player1.mention} WANTS TO BATTLE {player2.mention}!\n{player2.mention} DO YOU ACCEPT? (REPLY YES/NO)')
@@ -177,7 +179,7 @@ async def fight(ctx, player2):
             validanswer=False
             while validanswer==False :
                 try: 
-                    msg = await client.wait_for('message', timeout=10.0, check=lambda message: message.author == ctx.author)
+                    msg = await client.wait_for('message', timeout=10.0, check=lambda message: message.author == player1)
                     message = str(msg.content)
                     print(message)
                     if "heads" == message.lower() or "tails" == message.lower():
@@ -196,16 +198,20 @@ async def fight(ctx, player2):
                 if coinflip() == "heads":
                     await ctx.channel.send(f"{player1.mention} WON THE COIN TOSS AND WILL CHOOSE FIRST")
                     firstpick = player1
+                    secondpick = player2
                 else:
                     await ctx.channel.send(f"{player2.mention} WON THE COIN TOSS AND WILL CHOOSE FIRST")
                     firstpick = player2
+                    secondpick = player1
             elif message.lower() == "tails":
                 if coinflip() == "tails":
                     await ctx.channel.send(f"{player1.mention} WON THE COIN TOSS AND WILL CHOOSE FIRST")
                     firstpick = player1
+                    secondpick = player2
                 else:
                     await ctx.channel.send(f"{player2.mention} WON THE COIN TOSS AND WILL CHOOSE FIRST")
                     firstpick = player2
+                    secondpick = player1
                     
         else:
             await ctx.channel.send(f"{player2.mention} HAS DENIED THE BATTLE REQUEST, {player1.mention} WINS BY DEFAULT")
@@ -216,7 +222,15 @@ async def fight(ctx, player2):
         await ctx.channel.send(f"ERROR: Timeout Exception, {player1.mention} wins by default.")
     
     await ctx.channel.send(f"{firstpick.mention} WHICH FIGHTER DO YOU CHOOSE?\n")
-    await ctx.channel.send(f"```----- FIGHTER 1 -----\n\nNAME: {char1name}\nHEALTH: {char1hp}\nATTACK: {char1atk}\n\n\n\t\tOR\n\n\n----- FIGHTER 2 -----\n\nNAME: {char2name}\nHEALTH: {char2hp}\nATTACK: {char2atk}```")    
+    await ctx.channel.send(f"```----- FIGHTER 1 -----\n\nNAME: {char1name}\nHEALTH: {char1hp}\nATTACK: {char1atk}\n\n\n\t\tOR\n\n\n----- FIGHTER 2 -----\n\nNAME: {char2name}\nHEALTH: {char2hp}\nATTACK: {char2atk}\n\n\nENTER THE NUMBER OF THE FIGHTER YOU CHOOSE. (i.e. \"2\")```")
+
+    char_select = await client.wait_for('message', timeout=10.0, check=lambda message: message.author == firstpick) 
+
+    char_select_format = int(char_select.content) - 1
+    firstpick_fighter = fighters[char_select_format]
+    print(fighters[char_select_format])
+    await ctx.channel.send(f"{firstpick} CHOOSES {firstpick_fighter}")
+
 
 
 def coinflip():
